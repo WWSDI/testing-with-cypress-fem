@@ -44,16 +44,17 @@ describe('Sign Up', () => {
       .invoke('prop', 'validity')
       .then((validationState) => expect(validationState.valid).to.be.false);
 
-    // This is another way of doing it:
+    // Alternative approach:
     // .invoke('prop','validationMessage')
     // .should('not.be.empty');
   });
 
   it('should require that the email actually be an email address', () => {
     cy.get('@submit').type(validEmail);
-    cy.get('[data-test="sign-up-email"]')
-      .invoke('prop', 'validity')
-      .then((validationState) => expect(validationState.valid).to.be.true);
+    cy.get('[data-test="sign-up-email"]').invoke('prop', 'validity').its('valid').should('be.true');
+    // Alternative approach:
+    // Previously I used .then() to extract the properrty on invoke() yielded subject, but with its(), the syntax looks more elegant.
+    // .then((validationState) => expect(validationState.valid).to.be.true);
   });
 
   it('should require a password when the email is present', () => {
@@ -61,10 +62,9 @@ describe('Sign Up', () => {
     cy.get('@submit').type(validEmail);
 
     // 2. check if password validation exists
-    cy.get('[data-test="sign-up-password"]')
-      .invoke('prop', 'validity')
-      .should('exist')
-      // You can further test the properties of ValidationState obj as follow, such as if valueMissing equals to true then it indicates the password field is empty
-      // .then((validationState) => expect(validationState.valueMissing).to.be.true);
+    cy.get('[data-test="sign-up-password"]').invoke('prop', 'validity').should('exist');
+    // Alternative approach:
+    // You can further test the properties of ValidationState obj as follow, such as if valueMissing equals to true then it indicates the password field is empty
+    // .then((validationState) => expect(validationState.valueMissing).to.be.true);
   });
 });
