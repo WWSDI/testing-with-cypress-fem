@@ -40,8 +40,9 @@ describe('Pokémon Search', () => {
     cy.wait('@api').its('request.url').should('contain', 'name=char');
   });
 
-  it.only('should render the results to the page', () => {
+  it('should render the results to the page', () => {
     // The reason for using .intercept is that we are simply testing if the response can be rendered correctly (such as if rendered at all, if in correct format etc.). We don't care about the actual data being rendered. Therefore we don't need an actual API for that.
+    // if you pass a second argument to .intercept() then the request doesn't actual fires and the response object is stubbed with the argument you provided.
     cy.intercept('/pokemon-search/api?*', { pokemon: pokemons }).as('stubbed');
     cy.get('@search').type('ivy');
     pokemons.forEach(pokemon => cy.contains(pokemon.name))

@@ -40,3 +40,10 @@ Cypress.Commands.add('signIn', (user) => {
   cy.get('[data-test="sign-in-submit"]').click();
 
 });
+
+Cypress.Commands.add('fetchDogFacts', amount => {
+  cy.get('@amountSelect').select(String(amount)).trigger('input');
+  cy.get('@fetchButton').click();
+  cy.wait('@api');
+  cy.get('#facts').children().should('have.length', amount)
+})
