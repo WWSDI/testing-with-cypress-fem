@@ -7,6 +7,7 @@ async function main() {
 
   await prisma.$transaction([deletePosts, deleteUsers]);
 
+  // upsert is update/insert: if record exists, update; if not, insert.
   const first = await prisma.user.upsert({
     where: { email: 'first@example.com' },
     update: {},
@@ -45,7 +46,12 @@ async function main() {
     },
   });
 
-  return Promise.all([first, second]);
+  // ⛔️ I think this Promise.all() does nothing here really, as first and second are already the actual data, not promises. In fact, I reckon you can simply return [first, second] without breaking the main()
+  // 👻 Orignal approach: 
+  // return Promise.all([first, second]);
+  
+  // My apporoach: (tested and worked just fine)
+  return [first, second]
 }
 
 if (require.main === module) {
